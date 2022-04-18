@@ -1,76 +1,72 @@
 <template>
-    <h3 style="text-align: center;">Moduls</h3>
-    <div class="moduls" 
-    v-for="modul in moduls" 
-    :key="modul.titol">
+    <div class="moduls">
         <ul>
-            <li :class="completed(modul) ? 'completada' : 'noCompletada'">
-                {{modul.titol}}
+            <li :class="completed(completades, ufs) ? 'completada' : 'noCompletada'">
+                {{titol}}
             </li>
         </ul>
-        <ul v-if="modul.show">
-            <li class="data"><strong>Durada:</strong> {{modul.durada}}</li>
-            <li class="data"><strong>Horas de lliure disposició:</strong> {{modul.horesLliure}}</li>
-            <li class="data"><strong>Equivalència en crèdits ECTS:</strong> {{modul.credit}}</li>
-            <li class="data"><strong>Unitats formatives que el componen:</strong> {{modul.ufs}}</li>
-            <li class="data"><strong>Unitats formatives completades:</strong> {{modul.completades}}</li>
+        <ul v-if="show">
+            <li class="data"><strong>Durada:</strong> {{durada}}</li>
+            <li class="data"><strong>Horas de lliure disposició:</strong> {{horesLliure}}</li>
+            <li class="data"><strong>Equivalència en crèdits ECTS:</strong> {{credit}}</li>
+            <li class="data"><strong>Unitats formatives que el componen:</strong> {{ufs}}</li>
+            <li class="data"><strong>Unitats formatives completades:</strong> {{completades}}</li>
         </ul>
-        <button @click="canviarDetalls(modul)">{{ modul.show ? 'Amagar' : 'Mostrar'}}</button>
-        <button v-if="modul.show" @click="sumaUn(modul)">UF Completada</button>
+        <button @click="$emit('canviar-detalls', id)">{{ show ? 'Amagar' : 'Mostrar'}}</button>
+        <button v-if="show" @click="$emit('suma-un', id)">UF Completada</button>
     </div>
-    
 </template>
 <script>
 export default {
+    emits: ['canviar-detalls','suma-un'],
+    //Propietats dels paràmetres que recollim del pare
+    props: {
+        id: {
+            type: String,
+            required: true,
+        },
+        titol: {
+            type: String,
+            required: true,
+        },
+        durada: {
+            type: String,
+            required: true,
+        },
+        horesLliure: {
+            type: String,
+            required: true,
+        },
+        credit: {
+            type: Number,
+            required: true,
+        },
+        ufs: {
+            type: Number,
+            required: true,
+        },
+        completades: {
+            type: Number,
+            required: true,
+        },
+        show: {
+            type: Boolean,
+            required: true,
+        },
+    },
     data(){
         return {
-            moduls: [
-                {
-                    titol: 'Mòdul professional 5: entorns de desenvolupament',
-                    durada: '66 hores',
-                    horesLliure: 'No se n’assignen',
-                    credit: 6,
-                    ufs: 3,
-                    completades: 2,
-                    show: false
-                },
-                {
-                    titol: 'Mòdul professional 6: desenvolupament web en entorn client',
-                    durada: '165 hores',
-                    horesLliure: '33 hores',
-                    credit: 9,
-                    ufs: 4,
-                    completades: 4,
-                    show: false
-                },
-                {
-                    titol: 'Mòdul professional 7: desenvolupament web en entorn servidor',
-                    durada: '165 hores',
-                    horesLliure: '33 hores',
-                    credit: 12,
-                    ufs: 4,
-                    completades: 3,
-                    show: false
-                },
-            ],
+            
         }
     },
     methods: {
-        completed(modul){
+        //En cas que totes les uf estiguin completades envia true a la plantilla per mostrar-ho en verd
+        completed(completades, ufs){
             let ok = false
-            if (modul.completades == modul.ufs){
+            if (completades == ufs){
                 ok = true
             }
             return ok
-        },
-        canviarDetalls(modul){
-            modul.show = !modul.show
-            return modul.show
-        },
-        sumaUn(modul){
-            if (modul.completades+1 <= modul.ufs){
-                modul.completades += 1
-            }
         },
     },
 

@@ -1,6 +1,8 @@
 <template>
     <h3 style="text-align: center;">Formulari de registre de moduls</h3>
     <form @submit.prevent="submitModul">
+        <label>Id del mòdul: </label>
+        <input class="form-control" type="text" v-model="modul.id"><br>
         <label>Títol del mòdul: </label>
         <input class="form-control" type="text" v-model="modul.titol"><br>
         <label>Horas de lliure disposició: </label>
@@ -19,7 +21,9 @@ export default {
     emits: ['add-modul'],
     data(){
         return {
+            //Definim els paràmetres del nou mòdul
             modul: {
+                id: "",
                 titol: "",
                 durada: "",
                 horesLliure: "",
@@ -29,6 +33,7 @@ export default {
         }
     },
     methods: {
+        //Mètode per enviar el nou mòdul al pare
         submitModul(){
             this.$emit('add-modul', this.modul)
         }

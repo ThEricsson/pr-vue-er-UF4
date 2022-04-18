@@ -4,16 +4,20 @@
     <img id="vLogo" src="@/assets/logo.png">
     <h1 id="mainTitle">Mini Projecte Vue Eric Roca</h1>
     <div class="content">
+      <h3 style="text-align: center;">Moduls</h3>
       <list-modul
         v-for="modul in moduls"
-        :key="modul.titol"
+        :key="modul.id"
+        :id="modul.id"
         :titol="modul.titol"
         :durada="modul.durada"
-        :horesLliure="modul.horesLliure"
+        :hores-lliure="modul.horesLliure"
         :credit="modul.credit"
         :ufs="modul.ufs"
         :completades="modul.completades"
-        @add-modul="addModul"
+        :show="modul.show"
+        @canviar-detalls="canviarDetalls"
+        @suma-un="sumaUn"
       ></list-modul>
     </div>
     <div class="content">
@@ -28,20 +32,80 @@
     name: 'App',
     components: {
     },
-    methods:{
-      addModul(newModul){
-        const modul = {
-          titol: newModul.titol,
-          durada: newModul.durada,
-          horesLliure: newModul.horesLliure,
-          credit: newModul.credit,
-          ufs: newModul.ufs,
-          completades: 0,
-          show: false
-        }
-        console.log(modul)
-        this.moduls.push(modul)
+    data(){
+      return {
+        moduls: [
+          {
+            id: "MP5",
+            titol: 'Mòdul professional 5: entorns de desenvolupament',
+            durada: '66 hores',
+            horesLliure: 'No se n’assignen',
+            credit: 6,
+            ufs: 3,
+            completades: 2,
+            show: false
+          },
+          {
+            id: "MP6",
+            titol: 'Mòdul professional 6: desenvolupament web en entorn client',
+            durada: '165 hores',
+            horesLliure: '33 hores',
+            credit: 9,
+            ufs: 4,
+            completades: 4,
+            show: false
+          },
+          {
+            id: "MP7",
+            titol: 'Mòdul professional 7: desenvolupament web en entorn servidor',
+            durada: '165 hores',
+            horesLliure: '33 hores',
+            credit: 12,
+            ufs: 4,
+            completades: 3,
+            show: false
+          },
+      ],
       }
+    },
+    methods:{
+      //Funció que comprova si la id existeix i en cas que no crea el mòdul
+      addModul(newModul){
+        const identifiedModul = this.moduls.find(
+          (modul) => modul.id === newModul.id
+        )
+
+        if(identifiedModul === undefined){
+          const modul = {
+            id: newModul.id,
+            titol: newModul.titol,
+            durada: newModul.durada,
+            horesLliure: newModul.horesLliure,
+            credit: newModul.credit,
+            ufs: newModul.ufs,
+            completades: 0,
+            show: false
+          }
+          this.moduls.push(modul) 
+        }
+        
+      },
+      //Intercanvia l'estat dels detalls d'ocult a visible
+      canviarDetalls(mId){
+          const identifiedModul = this.moduls.find(
+            (modul) => modul.id === mId
+          )
+          identifiedModul.show = !identifiedModul.show
+      },
+      //Incrementa les uf completades
+      sumaUn(mId){
+          const identifiedModul = this.moduls.find(
+              (modul) => modul.id === mId
+            )
+          if (identifiedModul.completades+1 <= identifiedModul.ufs){
+            identifiedModul.completades += 1
+          }
+        },
     } 
   }
 </script>
